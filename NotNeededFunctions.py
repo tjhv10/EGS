@@ -89,3 +89,30 @@ def merge_files(input_folder, output_file):
                     lines = input_file.readlines()[1:]
                     output_file.write(''.join(lines))
                     output_file.write('\n')  # Add a line between files
+
+
+import xml.etree.ElementTree as ET
+
+# Load the XML file with the correct encoding (replace 'utf-8' with your file's encoding)
+tree = ET.parse('Games.xml', parser=ET.XMLParser(encoding='utf-8'))
+root = tree.getroot()
+
+# List to store events to be removed
+events_to_remove = []
+
+# Iterate through each event
+for event_element in root.iter():
+    if event_element.tag.startswith("event-"):
+        print("a")
+        pairs = event_element.findall('.//pair')
+    
+    # Check if any pair has a negative restot
+        if any(float(pair.find('restot').text) < 0 for pair in pairs):
+            events_to_remove.append(event_element)
+
+# Remove the events with negative restot
+for event in events_to_remove:
+    root.remove(event)
+
+# Save the modified XML file with the correct encoding
+tree.write('your_xml_file.xml', encoding='utf-8', xml_declaration=True)
