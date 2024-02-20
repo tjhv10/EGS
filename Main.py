@@ -21,7 +21,18 @@ count = 0
 # Iterate through all elements with a tag that starts with 'event-'
 for event_element in root.iter():
     if event_element.tag.startswith("event-"):
+        avgElo = 0
+        count = 0 
+        for pair_element in event_element.findall('.//pair'):
+            count+=1
+            pair_id = concatenate_values_ordered(pair_element.find('ibfn1').text, pair_element.find('ibfn2').text)
+            if pair_id in pairs_dict:
+                avgElo += pairs_dict[pair_id].elo
+            else:
+                avgElo +=1000
             # Iterate through each pair element within the event
+        avgElo/= count
+        print(avgElo)
         for pair_element in event_element.findall('.//pair'):
             pair_id = concatenate_values_ordered(pair_element.find('ibfn1').text, pair_element.find('ibfn2').text)
             restot = float(pair_element.find('restot').text)
