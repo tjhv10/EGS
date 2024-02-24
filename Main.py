@@ -23,11 +23,10 @@ def printPair(curId,okId,elo,avg_elo,restot,res):
         print("--------------------")
 
 def main():
-    root = ET.parse("Games.xml").getroot()
+    root = ET.parse("Games_modified.xml").getroot()
     pairs_dict = {}
     gain = 5
     printId = "23581-8252"
-    # gain = 2.05
     for event_element in root.iter():
         if event_element.tag.startswith("event-"):
             avg_elo = 0.0
@@ -47,7 +46,6 @@ def main():
                 if pair_id in pairs_dict:
                     pairs_dict[pair_id].games += 1
                     res = pairs_dict[pair_id].elo + gain * (restot - 50) + avg_elo - pairs_dict[pair_id].elo
-                    # res = pairs_dict[pair_id].elo + gain * (restot - 50 + avg_elo - pairs_dict[pair_id].elo)
                     printPair(pair_id,printId,pairs_dict[pair_id].elo,avg_elo,restot,res)
                     pairs_dict[pair_id].elo = round(res, 2)
                 else:
@@ -55,12 +53,12 @@ def main():
                     pairs_dict[pair_id] = pair_obj
                     pairs_dict[pair_id].games += 1
                     res = pairs_dict[pair_id].elo + gain * (restot - 50) + avg_elo - pairs_dict[pair_id].elo
-                    # res = pairs_dict[pair_id].elo + gain * (restot - 50 + avg_elo - pairs_dict[pair_id].elo)
                     printPair(pair_id,printId,pairs_dict[pair_id].elo,avg_elo,restot,res)
                     pairs_dict[pair_id].elo = round(res, 2)
-    # for pair_id, pair_obj in pairs_dict.items():
-    #     if pair_obj.games>0:
-    #         print(pair_obj)
+    for pair_id, pair_obj in pairs_dict.items():
+        if pair_obj.games>100:
+            print(pair_obj)
+
 
 main()
 
