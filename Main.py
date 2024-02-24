@@ -39,7 +39,7 @@ def main():
                 else:
                     avg_elo += 1000.0
             avg_elo /= count
-            avg_elo = round(avg_elo, 2)
+            avg_elo = round(avg_elo, 2)               
             for pair_element in event_element.findall('.//pair'):
                 pair_id = concatenate_values_ordered(pair_element.find('ibfn1').text, pair_element.find('ibfn2').text)
                 restot = float(pair_element.find('restot').text)
