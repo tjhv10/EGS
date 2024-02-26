@@ -91,28 +91,20 @@ def merge_files(input_folder, output_file):
                     output_file.write('\n')  # Add a line between files
 
 
-import xml.etree.ElementTree as ET
+def remove_text_between_lines(file_path, start_line, end_line):
+    with open(file_path, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
 
-# Load the XML file with the correct encoding (replace 'utf-8' with your file's encoding)
-tree = ET.parse('Games.xml', parser=ET.XMLParser(encoding='utf-8'))
-root = tree.getroot()
+    inside_section = False
+    new_lines = []
 
-# List to store events to be removed
-events_to_remove = []
+    for line in lines:
+        if start_line in line:
+            inside_section = True
+        elif end_line in line and inside_section:
+            inside_section = False
+        elif not inside_section:
+            new_lines.append(line)
 
-# Iterate through each event
-for event_element in root.iter():
-    if event_element.tag.startswith("event-"):
-        print("a")
-        pairs = event_element.findall('.//pair')
-    
-    # Check if any pair has a negative restot
-        if any(float(pair.find('restot').text) < 0 for pair in pairs):
-            events_to_remove.append(event_element)
-
-# Remove the events with negative restot
-for event in events_to_remove:
-    root.remove(event)
-
-# Save the modified XML file with the correct encoding
-tree.write('your_xml_file.xml', encoding='utf-8', xml_declaration=True)
+    with open(file_path, 'w', encoding='utf-8') as file:
+        file.writelines(new_lines)
