@@ -28,7 +28,7 @@ def main():
     root = ET.parse("Games.xml").getroot()
     pairs_dict = {}
     gain = 7
-    printId = "40854-49-335"
+    printId = "21164-21165"
     for event_element in root.iter():
         if event_element.tag.startswith("event-"):
             avg_elo = 0.0
@@ -61,5 +61,3 @@ def main():
     #     if pair_obj.elo>1000:
     #         print(pair_obj)
 main()
-
-
