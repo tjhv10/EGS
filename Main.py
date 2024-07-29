@@ -23,7 +23,7 @@ def print_pair(pair_id, current_id, elo, avg_elo, result, new_elo):
         print(f"Current ELO: {elo}")
         print(f"Average ELO: {avg_elo}")
         print(f"Result: {result}")
-        print(f"New ELO: {round(new_elo, 2)}")
+        print(f"New ELO: {new_elo}")
         print("--------------------")
 
 
@@ -33,8 +33,9 @@ def main():
     root = tree.getroot()
     
     pairs_dict = {}
-    gain = 7  # ELO gain constant
-    print_id = "2218-850"  # Example ID to print details for
+    gain1 = 4
+    gain2 = 1  # ELO gain constant
+    print_id = "2345-3366"  # Example ID to print details for
 
     for event_element in root.iter():
         if event_element.tag.startswith("event-"):
@@ -54,14 +55,15 @@ def main():
                 restot = float(pair_element.find('restot').text)
                 pair_obj = pairs_dict.get(pair_id, Pair(pair_id))
                 pair_obj.games += 1
-                new_elo = pair_obj.elo + gain * (restot - 50) + avg_elo - pair_obj.elo
+                new_elo = round(pair_obj.elo + gain1 * (restot - 50) + gain2 * (avg_elo - pair_obj.elo),2)
                 print_pair(pair_id, print_id, pair_obj.elo, avg_elo, restot, new_elo)
-                pair_obj.elo = round(new_elo, 2)
+                pair_obj.elo = new_elo
                 pairs_dict[pair_id] = pair_obj
+    
+
+if __name__ == "__main__":
+    main()
     # Print candidait ID's that are good for example
     # for pair_id, pair_obj in pairs_dict.items():
     #     if pair_obj.elo>1000 and pair_obj.games<10 and pair_obj.games>5:
     #         print(pair_obj)
-
-if __name__ == "__main__":
-    main()
