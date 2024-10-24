@@ -108,3 +108,46 @@ def remove_text_between_lines(file_path, start_line, end_line):
 
     with open(file_path, 'w', encoding='utf-8') as file:
         file.writelines(new_lines)
+
+import xml.etree.ElementTree as ET
+
+def main():
+    # Load the XML file
+    tree = ET.parse("Games.xml")
+    root = tree.getroot()
+
+    # Find events with at least one restot less than 0
+    events_to_remove = []
+
+    for event in root.iter():
+        if event.tag.startswith("event-"):
+            has_negative_restot = False
+            
+            # Check all pairs within the event
+            for pair in event.findall('.//pair'):
+                restot_element = pair.find('restot')
+                if restot_element is not None and restot_element.text:
+                    try:
+                        restot_value = float(restot_element.text)
+                        if restot_value < 0:
+                            has_negative_restot = True
+                            break
+                    except ValueError:
+                        print(f"Warning: Could not convert restot value '{restot_element.text}' to float.")
+
+            if has_negative_restot:
+                events_to_remove.append(event)
+
+    # Remove the events with negative restot
+    for event in events_to_remove:
+        print("hi")
+        root.remove(event)
+
+    # Save the modified XML back to a file
+    tree.write("Modified_Games.xml")
+
+    # Print a message indicating the operation is complete
+    print("Finished processing. Modified file saved as 'Modified_Games.xml'.")
+
+if __name__ == "__main__":
+    main()
