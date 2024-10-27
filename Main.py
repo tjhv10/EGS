@@ -10,8 +10,8 @@ class Pair:
         self.online_games = online_games  # Count of online games
 
     def __str__(self):
-        return (f"ID: {self.pair_id}, ELO: {self.elo}, Second ELO: {self.second_elo}, "
-                f"Games: {self.games}, Online Games: {self.online_games}")
+        return (f"Pair ID: {self.pair_id}, Phisycal ELO: {self.elo}, Online ELO: {self.second_elo}, "
+                f"Phisycal Games: {self.games}, Online Games: {self.online_games}")
 
 def concatenate_values_ordered(a, b):
     return a + "-" + b if a < b else b + "-" + a
@@ -26,7 +26,7 @@ def print_pair(type,pair_id, current_id, elo, second_elo, avg_elo, result, new_e
         print(f"Online ELO: {second_elo}")
         print(f"Average ELO: {avg_elo}")
         print(f"Result: {result}")
-        print(f"Updated ELO: {new_elo}")
+        print(f"Updated pyhisical ELO: {new_elo}")
         print(f"Updated Online ELO: {new_online_elo}")
         print("--------------------")
 
@@ -36,7 +36,6 @@ def main():
     
     pairs_dict = {}
     gain1 = 4
-    gain2 = 1  # ELO gain constant
     print_id = "11003-9605"  # Example ID to print details for
 
     for event_element in root.iter():
@@ -81,12 +80,12 @@ def main():
                     
                 if event_type == '4':
                     pair_obj.online_games += 1
-                    new_second_elo = round(pair_obj.second_elo + gain1 * (restot - 50) + gain2 * (avg_elo - pair_obj.second_elo), 2)
+                    new_second_elo = round(pair_obj.second_elo + gain1 * (restot - 50) + (avg_elo - pair_obj.second_elo), 2)
                     print_pair("4",pair_id, print_id, pair_obj.elo, pair_obj.second_elo, avg_elo, restot, pair_obj.elo ,new_second_elo)
                     pair_obj.second_elo = new_second_elo
                 else:
                     pair_obj.games += 1
-                    new_elo = round(pair_obj.elo + gain1 * (restot - 50) + gain2 * (avg_elo - pair_obj.elo), 2)
+                    new_elo = round(pair_obj.elo + gain1 * (restot - 50) +  (avg_elo - pair_obj.elo), 2)
                     print_pair("0",pair_id, print_id, pair_obj.elo, pair_obj.second_elo, avg_elo, restot, new_elo,pair_obj.second_elo)
                     pair_obj.elo = new_elo
                 pairs_dict[pair_id] = pair_obj
@@ -97,5 +96,5 @@ if __name__ == "__main__":
     pairs_dict = main()
     threshold = 75  # Example threshold
     for pair_id, pair_obj in pairs_dict.items():
-        if pair_obj.second_elo > pair_obj.elo + threshold and pair_obj.second_elo != 1000 and pair_obj.games > 5:
+        if pair_obj.second_elo > pair_obj.elo + threshold and pair_obj.second_elo != 1000 and pair_obj.games > 6:
             print(f"Significantly higher ELO: {pair_obj}")
